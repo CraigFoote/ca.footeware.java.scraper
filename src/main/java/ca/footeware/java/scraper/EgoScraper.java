@@ -47,7 +47,8 @@ public class EgoScraper {
 			if (!found) {
 				System.err.println(soughtName + " not found at " + URL + ".");
 			}
-		} while (soughtName != "q");
+		} while (!"q".equals(soughtName));
+		scanner.close();
 		System.out.println("Toodles!");
 	}
 }
