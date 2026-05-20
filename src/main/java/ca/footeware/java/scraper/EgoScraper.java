@@ -25,7 +25,7 @@ public class EgoScraper {
 		Scanner scanner = new Scanner(System.in);
 		String soughtName = null;
 		do {
-			System.out.println("Enter extension name (press Enter for 'Server Status Indicator' or 'q' to quit):");
+			System.out.println("Enter extension name (press Enter for 'Server Status Indicator' or 'q' to quit):"); // NOSONAR
 			soughtName = scanner.nextLine();
 			if (soughtName.isEmpty()) {
 				soughtName = SERVER_STATUS;
@@ -41,9 +41,9 @@ public class EgoScraper {
 				while ((extension = streamer.selectNext("li.extension")) != null) {
 					counter++;
 					String extensionName = extension.selectFirst("h3").selectFirst("a").text();
-					if (soughtName.equals(extensionName)) {
+					if (soughtName.equalsIgnoreCase(extensionName)) {
 						String message = String.format(SUCCESS, extensionName, counter, URL);
-						System.out.println(message);
+						System.out.println(message); // NOSONAR
 						found = true;
 						break;
 					}
@@ -53,10 +53,10 @@ public class EgoScraper {
 
 			if (!found) {
 				String message = String.format(FAIL, soughtName, URL);
-				System.err.println(message);
+				System.err.println(message); // NOSONAR
 			}
 		} while (!"q".equals(soughtName));
 		scanner.close();
-		System.out.println("Toodles! Send money!");
+		System.out.println("Toodles! Send money!"); // NOSONAR
 	}
 }
