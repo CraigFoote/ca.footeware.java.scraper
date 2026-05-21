@@ -4,8 +4,9 @@ import java.io.IOException;
 import java.util.Scanner;
 
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.parser.StreamParser;
+import org.jsoup.select.Elements;
 
 /**
  * Scrapes extensions.gnome.org's review page for provided name and reports its
@@ -15,7 +16,7 @@ public class EgoScraper {
 
 	private static final String SERVER_STATUS = "Server Status Indicator";
 	private static final String URL = "https://extensions.gnome.org/review/";
-	private static final String SUCCESS = "'%s' is in position %d at %s.";
+	private static final String SUCCESS = "'%s' is in position %d of %d at %s.";
 	private static final String FAIL = "Extension named '%s' not found at %s.";
 
 	/**
@@ -34,26 +35,26 @@ public class EgoScraper {
 				break;
 			}
 
+			Document document = Jsoup.connect(URL).get();
+			Elements extensions = document.select("li.extension");
+			int numExtensions = extensions.size();
+
 			int counter = 0;
 			boolean found = false;
-			try (StreamParser streamer = Jsoup.connect(URL).execute().streamParser()) {
-				Element extension;
-				while ((extension = streamer.selectNext("li.extension")) != null) {
-					counter++;
-					String extensionName = extension.selectFirst("h3").selectFirst("a").text();
-					if (soughtName.equalsIgnoreCase(extensionName)) {
-						String message = String.format(SUCCESS, extensionName, counter, URL);
-						System.out.println(message); // NOSONAR
-						found = true;
-						break;
-					}
-					extension.remove(); // Keep memory usage low by discarding processed elements
+			for (Element extension : extensions) {
+				counter++;
+				String extensionName = extension.selectFirst("h3").selectFirst("a").text();
+				if (soughtName.equalsIgnoreCase(extensionName)) {
+					String message = String.format(SUCCESS, extensionName, counter, numExtensions, URL);
+					System.out.println(message); // NOSONAR
+					found = true;
+					break;
 				}
 			}
 
 			if (!found) {
 				String message = String.format(FAIL, soughtName, URL);
-				System.err.println(message); // NOSONAR
+				System.out.println(message); // NOSONAR
 			}
 		} while (!"q".equals(soughtName));
 		scanner.close();
