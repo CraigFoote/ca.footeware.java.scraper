@@ -17,7 +17,7 @@ public class EgoScraper {
 	private static final String SERVER_STATUS = "Server Status Indicator";
 	private static final String URL = "https://extensions.gnome.org/review/";
 	private static final String SUCCESS = "'%s' is in position %d of %d at %s.";
-	private static final String FAIL = "Extension named '%s' not found at %s.";
+	private static final String FAIL = "Extension named '%s' not found out of %d at %s.";
 
 	/**
 	 * @throws IOException if JSoup cannot connect to EGO's review page
@@ -53,7 +53,7 @@ public class EgoScraper {
 			}
 
 			if (!found) {
-				String message = String.format(FAIL, soughtName, URL);
+				String message = String.format(FAIL, soughtName, numExtensions, URL);
 				System.out.println(message); // NOSONAR
 			}
 		} while (!"q".equals(soughtName));
