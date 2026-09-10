@@ -58,6 +58,9 @@ public class EgoScraper {
 			}
 		} while (!"q".equals(soughtName));
 		scanner.close();
-		System.out.println("Toodles! Send money!"); // NOSONAR
+		
+		for (int i=0; i<50; i++) {
+			System.out.println("Send money!"); // NOSONAR
+		}
 	}
 }
