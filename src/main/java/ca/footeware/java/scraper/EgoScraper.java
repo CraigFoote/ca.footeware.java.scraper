@@ -26,7 +26,7 @@ public class EgoScraper {
 		Scanner scanner = new Scanner(System.in);
 		String soughtName = null;
 		do {
-			System.out.println("Enter extension name (press Enter for 'Server Status Indicator' or 'q' to quit):"); // NOSONAR
+			System.out.println("\nEnter extension name (press Enter for 'Server Status Indicator' or 'q' to quit):"); // NOSONAR
 			soughtName = scanner.nextLine();
 			if (soughtName.isEmpty()) {
 				soughtName = SERVER_STATUS;
@@ -34,6 +34,9 @@ public class EgoScraper {
 			if (soughtName.equals("q")) {
 				break;
 			}
+
+			String message = String.format("Searching %s for '%s'...", URL, soughtName); // NOSONAR
+			System.out.println(message);
 
 			Document document = Jsoup.connect(URL).get();
 			Elements extensions = document.select("li.extension");
@@ -45,7 +48,7 @@ public class EgoScraper {
 				counter++;
 				String extensionName = extension.selectFirst("h3").selectFirst("a").text();
 				if (soughtName.equalsIgnoreCase(extensionName)) {
-					String message = String.format(SUCCESS, extensionName, counter, numExtensions, URL);
+					message = String.format(SUCCESS, extensionName, counter, numExtensions, URL);
 					System.out.println(message); // NOSONAR
 					found = true;
 					break;
@@ -53,13 +56,13 @@ public class EgoScraper {
 			}
 
 			if (!found) {
-				String message = String.format(FAIL, soughtName, numExtensions, URL);
+				message = String.format(FAIL, soughtName, numExtensions, URL);
 				System.out.println(message); // NOSONAR
 			}
 		} while (!"q".equals(soughtName));
 		scanner.close();
-		
-		for (int i=0; i<50; i++) {
+
+		for (int i = 0; i < 50; i++) {
 			System.out.println("Send money!"); // NOSONAR
 		}
 	}
